@@ -31,6 +31,7 @@ Do this by calling `setBaudRate(baudRateIndex)` followed by `restartModule()` or
 
 The original baud rate can be restored with `restoreFactorySettings()` or `setBaudRate(256000)`, also followed by `restartModule()` or power-up.
 
+If you have very long RX/TXT lines, then you can also use a slower speed to improve reliability.
 
 > [!NOTE]
 > "Baud rate" and "bits-per-second" (clock speed) are not the same thing. When people refer to the "Baud rate", they usually mean the clock speed in bits-per-second. The Baud rate is the number of actual _data bits_ sent per second, which EXCLUDES the start, stop and parity bits and incorporates the delay between each byte and each message. So a "bits-per-second" speed of 9600 (with 1 start, 1 stop and 1 parity bit, 8E1) is actually a maximum Baud rate of about 6980, or 870 bytes per second, assuming there are no delays between bytes and between messages.
@@ -38,7 +39,7 @@ The original baud rate can be restored with `restoreFactorySettings()` or `setBa
 
 ## Distance Gates
 
-The sensor uses _distance gates_, which are time windows for the reflected radar signal. The default span of a distance gate is 0.75m. This can be set to 0.2m using `setDistanceResolution()`, which reduces the range to 1.6m.
+The sensor uses _distance gates_, which are time windows for the reflected radar signal. The default span of a distance gate is 0.75m. This can be set to 0.2m using `setDistanceResolution()`, which reduces the detection range to 1.6m.
 
 Each distance gate can be programmed with its own _sensitivity_.
 
@@ -54,14 +55,14 @@ The sensitivity can be set for each gate, range 0..100, using `setGateSensitivit
 
 The sensor can detect both moving and static targets. 
 
-There are two sets of distance gates, one 'motion gate' set for moving targets, and one 'static gate' set for stationary targets. The number of distance gates (the last distance gate) can be set for motion and static, and the distance gate sensitivity (energy) values can be set for each distance gate.
+There are two sets of distance gates. 'Motion gates' for moving targets, and 'static gates' for stationary targets. The number of motion and static distance gates (the last distance gate numbers) can be set, and the distance gate sensitivity (energy) values can be set for each of the distance gates.
 
 
 ## Unoccupied Detection
 
-A delay between the last motion or static detection and the clearing of 'presence detected' is set with `setMaxGate(..., short unoccupiedDuration)`, in seconds. 
+A delay between the last motion or static detection and the clearing of 'presence detected' (occupied/unoccupied) is set with `setMaxGate(..., short unoccupiedDuration)`, in seconds. 
 
-The `OUT` pin goes high when a presence (motion or static) is detected, and low when nothing has been detected for the `unoccupiedDuration` period.
+The `OUT` pin goes high when a presence (motion or static) is detected, and goes low when nothing has been detected for the `unoccupiedDuration` period.
 
 
 ## Configuration Mode and Radar Data Report Mode
@@ -121,7 +122,9 @@ This is an overview of the functionality. For details of each method, refer to t
 TODO
 
 Chapter numbers in the source code refer to this version of the data sheet, \
+xxx
 <!-- TODO muman.ch/pub link -->
+
 
 ```cpp
 class LD2410mmWave
@@ -223,7 +226,7 @@ public:
 
 The example sketch uses two serial ports. `Serial` for the Serial Monitor output, and `Serial1` for communicating with the mmWave sensor. It shows how to define `Serial1` on several different MCUs.
 
-`Serial1` must be `HardwareSerial` (or `Uart`) to support the fast 256000bps default serial speed. If you want to use `SoftwareSerial`, you must re-program the sensor for a slower baud rate with `setBaudRate()`, then `restartModule()`, or power off/on. If you have very long RX/TXT lines then you can also use a slower speed to improve reliability.
+`Serial1` must be `HardwareSerial` (or `Uart`) to support the fast 256000bps default serial speed. If you want to use `SoftwareSerial`, you must re-program the sensor for a slower baud rate, as decibed above.
 
 It has some patched-out code to do a **factory reset**, which you can enable by changing `#if 0` to `#if 1`.
 
@@ -285,7 +288,7 @@ https://github.com/limengdu/mmwave_for_XIAO
 
 | Date       | Version  | Notes        |
 |:---------- |:---------| :----------- |
-| 2026.11.15 | 0.0.0    | Preliminary  |
+| 2026.11.xx | 0.0.0    | Preliminary  |
 
 <br/>
 
