@@ -31,7 +31,7 @@ Do this by calling `setBaudRate(baudRateIndex)` followed by `restartModule()` or
 
 The original baud rate can be restored with `restoreFactorySettings()` or `setBaudRate(256000)`, also followed by `restartModule()` or power-up.
 
-If you have very long RX/TXT lines, then you can also use a slower speed to improve reliability.
+If you have long RX/TX wires, then you could also use a slower speed to improve reliability.
 
 > [!NOTE]
 > "Baud rate" and "bits-per-second" (clock speed) are not the same thing. When people refer to the "Baud rate", they usually mean the clock speed in bits-per-second. The Baud rate is the number of actual _data bits_ sent per second, which EXCLUDES the start, stop and parity bits and incorporates the delay between each byte and each message. So a "bits-per-second" speed of 9600 (with 1 start, 1 stop and 1 parity bit, 8E1) is actually a maximum Baud rate of about 6980, or 870 bytes per second, assuming there are no delays between bytes and between messages.
@@ -92,7 +92,7 @@ A single output indicates 'occupied' or 'vacant' (no body present). This pin can
 Once the mmWave chip has been configured, this signal is all you need for many applications. There is no need to use this library, unless you need more detailed Engineering Mode information. 
 
 
-## Notes
+## Notes   ♩ ♪ ♫ ♬
 
 * After configuration, it is not necessary to use the serial communications unless you want to re-configure the chip or read the more detailed 'Engineering' data values. First configure it with this library, or the PC or mobile phone app. Then use the `OUT` pin for presence detection.
 
@@ -102,7 +102,7 @@ Once the mmWave chip has been configured, this signal is all you need for many a
 
 * If the 'target state' changes to 'no target', the RADARDATA values do not change. They are changed only if a new target is detected.
 
-* When running continuously in 'engineering mode', it sometimes switches out of engineering mode on its own and stops returning `ENGINEERINGDATA`. The example sketch detects this and re-enables engineering mode.
+* When running continuously in 'engineering mode', it sometimes switches out of engineering mode on its own and stops returning `ENGINEERINGDATA`. The example sketch detects this and re-enables engineering mode, in `loop()`.
 
 
 ## Installing the Library
@@ -274,7 +274,7 @@ TODO add to muman.ch
 **All HLK mmWave documents can be found here** \
 https://www.hlktech.net/index.php?id=1176
 
-**The other LD2410 libraries** \
+**Check out the other LD2410 libraries...** \
 https://github.com/ncmreynolds/ld2410 \
 https://github.com/iavorvel/MyLD2410 \
 https://github.com/lizardking/LD2410Async \
