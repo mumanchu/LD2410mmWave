@@ -23,7 +23,7 @@ The picture below is the LD2410S board, which needs the [LD2410SmmWave Library](
 Now follows a summary of the LD2410's features, so you don't have to read the manual.
 
 
-## Configurable Baud Rate :-)
+## Configurable Baud Rate
 
 The default serial port clock speed is fast, 256000bps. This is fine for `HardwareSerial` (or `Uart`), but if you want to use a `SoftwareSerial` port then you must reduce this to 9600, 19200 or 38400, depending on the speed of your MCU.
 
@@ -92,7 +92,7 @@ A single digital output indicates 'occupied' (moving or sationary) or 'unoccupie
 Once the mmWave chip has been configured, this signal is all you need for many applications. You don't really need the serial communications unless you want the more detailed Engineering Mode information. 
 
 
-## Notes   ♩ ♪ ♫ ♬
+## Notes ♩ ♪ ♫ ♬
 
 * After configuration, it is not necessary to use the serial communications unless you want to re-configure the chip or read the more detailed 'Engineering' data values. First configure it with this library, or the PC or mobile phone app. Then use the `OUT` pin for presence detection.
 
@@ -125,7 +125,7 @@ For details of each method, refer to the comments in the source code, [src/LD241
 Chapter numbers in the source code refer to this version of the data sheet, \
 https://muman.ch/pub/HLK-LD2410C-serial-communication-protocol-V1.07.pdf
 
-The library is in a single include file, not separate `.h` and `.cpp` files. This is fine if you want to access the class from a single source file, which is the usual case. If you need to access it from more than one source file then separate it into two files.
+The library is in a single include file, not separate `.h` and `.cpp` files. This is fine if you want to access the class from a single source file, which is the usual case. If you need to access it from more than one source file, then move the code into a `.cpp` file.
 
 ```cpp
 class LD2410mmWave
@@ -270,7 +270,7 @@ There is a problem where the sensor regularly drops out of Engineering Mode and 
 https://muman.ch/pub/HLK-LD2410C-serial-communication-protocol-V1.07.pdf
 https://muman.ch/pub/HLK-LD2410B-serial-communication-protocol-V1.07.pdf
 
-**All HLK mmWave documents can be found here** \
+**Other HLK mmWave documents can be found here** \
 https://www.hlktech.net/index.php?id=1176
 
 **24MHz mmWave Sensor for XIAO** \
