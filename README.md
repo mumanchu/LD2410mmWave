@@ -120,11 +120,10 @@ To open the example sketch, select menu item "File > Examples" and scroll down b
 
 This provides an overview of the library.
 
-For details of each method, refer to the comments in the source code, \
-TODO
+For details of each method, refer to the comments in the source code, [src/LD2410mmWave.h](src/LD2410mmWave.h).
 
 Chapter numbers in the source code refer to this version of the data sheet, \
-TODO muman.ch/pub link
+https://muman.ch/pub/HLK-LD2410C-serial-communication-protocol-V1.07.pdf
 
 The library is in a single include file, not separate `.h` and `.cpp` files. This is fine if you want to access the class from a single source file, which is the usual case. If you need to access it from more than one source file then separate it into two files.
 
@@ -267,17 +266,17 @@ There is a problem where the sensor regularly drops out of Engineering Mode and 
 
 ## References
 
+**HLK-2410C and HLK-2410B Communications Protocol V1.07** \
+https://muman.ch/pub/HLK-LD2410C-serial-communication-protocol-V1.07.pdf
+https://muman.ch/pub/HLK-LD2410B-serial-communication-protocol-V1.07.pdf
+
+**All HLK mmWave documents can be found here** \
+https://www.hlktech.net/index.php?id=1176
+
 **24MHz mmWave Sensor for XIAO** \
 The protocol is the same for the HLK-LD2410B and HLK-2410C \
 https://files.seeedstudio.com/wiki/mmwave-for-xiao/24GHz_mmWave_for_XIAO-Usermanual-V1.00.pdf \
 https://wiki.seeedstudio.com/mmwave_for_xiao/
-
-**HLK-2410C Communications Protocol V1.07** \
-https://muman.ch/pub/HLK-LD2410C-Serial-communication-protocol-V1.07.pdf
-TODO add to muman.ch
-
-**All HLK mmWave documents can be found here** \
-https://www.hlktech.net/index.php?id=1176
 
 **Some other LD2410 libraries...** \
 https://github.com/ncmreynolds/ld2410 \
