@@ -1,7 +1,7 @@
 #pragma once
 
 ///////////////////////////////////////////////////////////////////////////////
-// Library for LD2410C and LD2410B 24GHz mmWave Sensor
+// Arduino Library for LD2410C and LD2410B 24GHz mmWave Sensor
 // Human Presence Radar Sensing Module with S3KM1110 chip
 // Copyright (C) https://muman.ch + https://github.com/mumanchu, 2026.11.17
 // If you re-use this software, please include the above copyright notice
