@@ -4,7 +4,7 @@ There are (at least) three versions of the LD2410 sensor module. The LD2410B, LD
 
 <img height="300" alt="LD2410 Boards" src="images/ld2410c-boards.jpg" />
 
-In the pictures above, left to right,
+The pictures above, left to right,
 
 * 24Ghz mmWave Human Static Presence Sensor for Seeed Studio XIAO, SKU 101010001
 * HLK-2410C
@@ -16,7 +16,7 @@ All modules use the same S3KM1110 mmWave chip.
 
 The picture below is the LD2410S board, which needs the [LD2410SmmWave Library](https://github.com/mumnachu/LD2410SmmWave). This is a nice board, and it is more common and cheaper than the others.
 
-<img height="300" alt="LD2410S Board" src="images/ld2410s.jpg" />
+<img height="250" alt="LD2410S Board" src="images/ld2410s.jpg" />
 
 <br/>
 
