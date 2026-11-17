@@ -2,9 +2,9 @@
 
 There are (at least) three versions of the LD2410 sensor module. The LD2410B, LD2410C and LD2410S. This library is for the LD2410B and LD2410C versions. The LD2410S has a different communications protocol, so use the [LD2410SmmWave Library](https://github.com/mumnachu/LD2410SmmWave) for that one.
 
-<img height="300" alt="LD2410 Boards" src="images/ld2410-boards-1.jpg" />
+<img height="300" alt="LD2410 Boards" src="images/ld2410c-boards.jpg" />
 
-In the picture above, left to right,
+In the pictures above, left to right,
 
 * 24Ghz mmWave Human Static Presence Sensor for Seeed Studio XIAO, SKU 101010001
 * HLK-2410C
@@ -23,7 +23,7 @@ The picture below is the LD2410S board, which needs the [LD2410SmmWave Library](
 Now follows a summary of the LD2410's features, so you don't have to read the manual.
 
 
-## Configurable Baud Rate
+## Configurable Baud Rate :-)
 
 The default serial port clock speed is fast, 256000bps. This is fine for `HardwareSerial` (or `Uart`), but if you want to use a `SoftwareSerial` port then you must reduce this to 9600, 19200 or 38400, depending on the speed of your MCU.
 
@@ -31,10 +31,30 @@ Do this by calling `setBaudRate(baudRateIndex)` followed by `restartModule()` or
 
 The original baud rate can be restored with `restoreFactorySettings()` or `setBaudRate(256000)`, also followed by `restartModule()` or power-up.
 
-If you have long RX/TX wires, then you could also use a slower speed to improve reliability.
+If you have long RX/TX wires, then you should also use a slower speed to improve reliability.
 
 > [!NOTE]
 > "Baud rate" and "bits-per-second" (clock speed) are not the same thing. When people refer to the "Baud rate", they usually mean the clock speed in bits-per-second. The Baud rate is the number of actual _data bits_ sent per second, which EXCLUDES the start, stop and parity bits and incorporates the delay between each byte and each message. So a "bits-per-second" speed of 9600 (with 1 start, 1 stop and 1 parity bit, 8E1) is actually a maximum Baud rate of about 6980, or 870 bytes per second, assuming there are no delays between bytes and between messages.
+
+
+## Configuration Mode and Radar Data Report Mode
+
+The programmed settings are stored in nonvolatile memory, so they only need to be programmed once. This can be done using this library, with the PC application , or the Bluetooth phone app (XIAO version only).
+
+To configure the sensor with this library, you must first put it into _Configuration Mode_ with `enableConfigurationMode()`. This stops the radar data output and puts it into a mode ready to receive commands. The library does not do this for you. Some libraries enable/disable Configuration Mode for every command, but that's not very efficient if you want to send multiple commands.
+
+After calling `LD2410mmWave.begin()`, the sensor is already in _Configuration Mode_.
+
+Use `disableConfigurationMode()` to end configuration mode and resume radar data transmissions.
+
+
+## Radar Data Report Mode : Standard and Engineering Data Reports
+
+When not in _Configuration mode_, the sensor is in _Radar Data Report Mode_ where it continously sends messages to the MCU on the TX line. These messages are polled from `loop()` by `sensor.receive(&radarData, &engineeringData)`, as shown in the example sketch.
+
+_Engineering mode_ enables additional data to be returned in the radar messages, in the `ENGINEERINGDATA` structure. Enable this with `startEngineeringMode()`.
+
+The _mumanchu_ library uses a real-time 'state machine' in `receive()` to parse the message as it is received and determine if it's a 'command acknowledge' message or a 'radar data' message. The state machine restarts if there are any errors in the message.
 
 
 ## Distance Gates
@@ -43,7 +63,7 @@ The sensor uses _distance gates_, which are time windows for the reflected radar
 
 Each distance gate can be programmed with its own _sensitivity_.
 
-The S3KM1110 has up to 8 distance gates, allowing a range of 0.75 .. 6m (or 0.75 .. 1.6m). The maximum range can be reduced by setting the farthest (max) distance gate `setMaxGate(byte maxMotionGate, byte maxStaticGate,	short unoccupiedDuration)` for motion and static gates. This also sets the 'unoccupied' delay.
+The S3KM1110 has up to 8 distance gates, allowing a range of 0.75 .. 6m, or 0.75 .. 1.6m, depending on the stance resolution. The maximum range can be reduced by setting the farthest (max) distance gate `setMaxGate(byte maxMotionGate, byte maxStaticGate,	short unoccupiedDelay)` for motion and static gates. `setMaxGate()` also sets the 'unoccupied' delay.
 
 
 ## Sensitivity
@@ -53,43 +73,23 @@ The sensitivity can be set for each gate, range 0..100, using `setGateSensitivit
 
 ## Moving and Static Targets
 
-The sensor can detect both moving and static targets. 
+The sensor can detect both moving and static targets, even at the same time.
 
-There are two sets of distance gates. 'Motion gates' for moving targets, and 'static gates' for stationary targets. The number of motion and static distance gates (the last distance gate numbers) can be set, and the distance gate sensitivity (energy) values can be set for each of the distance gates.
-
-
-## Unoccupied Detection
-
-A delay between the last motion or static detection and the clearing of 'presence detected' (occupied/unoccupied) is set with `setMaxGate(..., short unoccupiedDuration)`, in seconds. 
-
-The `OUT` pin goes high when a presence (motion or static) is detected, and goes low when nothing has been detected for the `unoccupiedDuration` period.
+There are two sets of distance gates. 'Motion gates' for moving targets, and 'static gates' for stationary targets. The number of motion and static distance gates (the last distance gate numbers) can be set with `setMaxGate()`, and the distance gate sensitivity (energy) values can be set for each individual distance gate.
 
 
-## Configuration Mode and Radar Data Report Mode
+## Unoccupied Delay
 
-The programmed settings are stored in nonvolatile memory, so they only need to be programmed once. This can be done using this library, with the PC applicatin , or the Bluetooth phone app (XIAO version only).
+The delay between the last motion or static detection and the clearing of 'presence detected' (occupied -> unoccupied) is set with `setMaxGate(..., short unoccupiedDelay)` in seconds. 
 
-To configure the sensor with this library, you must first put it into _Configuration Mode_ with `enableConfigurationMode()`. This stops the radar data output and puts it into a mode ready to receive commands. The library does not do this for you. Some libraries enable/disable Configuration Mode for every command, but that's not very efficient if you want to send multiple commands.
-
-After calling `LD2410mmWave.begin()`, the sensor is already in _Configuration Mode_.
-
-Use `disableConfigurationMode()` to end configuration mode and resume radar data transmissions.
-
-
-## Radar Data Mode : Standard and Engineering Data Report Modes
-
-When not in _Configuration mode_, the sensor is in _Radar Data Output Mode_ and the it continously sends messages to the MCU on the TX line. These messages are polled by `sensor.receive(&radarData, &engineeringData)`, as shown in the example sketch, see the `RADARDATA` structure.
-
-_Engineering mode_ enables additional data to be returned in the radar messages, see the `ENGINEERINGDATA` structure. Enable this with `startEngineeringMode()`.
-
-The _mumanchu_ library uses a real-time 'state machine' in `receive()` to parse the message as it is received and determine if it's a 'command acknowledge' message or a 'radar data' message.
+The `OUT` pin goes high when a presence (motion or static) is detected, and goes low when nothing has been detected for the `unoccupiedDelay` period.
 
 
 ## Output Pin
 
-A single output indicates 'occupied' or 'vacant' (no body present). This pin can be connected to a microcontroller input which can be polled or can generate an interrupt when the state changes. 
+A single digital output indicates 'occupied' (moving or sationary) or 'unoccupied' (no body present). This output can be connected to a microcontroller input which can be polled, or generate an interrupt when the state changes. 
 
-Once the mmWave chip has been configured, this signal is all you need for many applications. There is no need to use this library, unless you need more detailed Engineering Mode information. 
+Once the mmWave chip has been configured, this signal is all you need for many applications. You don't really need the serial communications unless you want the more detailed Engineering Mode information. 
 
 
 ## Notes   ♩ ♪ ♫ ♬
@@ -102,7 +102,7 @@ Once the mmWave chip has been configured, this signal is all you need for many a
 
 * If the 'target state' changes to 'no target', the RADARDATA values do not change. They are changed only if a new target is detected.
 
-* When running continuously in 'engineering mode', it sometimes switches out of engineering mode on its own and stops returning `ENGINEERINGDATA`. The example sketch detects this and re-enables engineering mode, in `loop()`.
+* When running continuously in 'engineering mode', it sometimes switches out of engineering mode on its own and stops returning the additional `ENGINEERINGDATA`. The example sketch detects this and re-enables engineering mode.
 
 
 ## Installing the Library
@@ -118,13 +118,15 @@ To open the example sketch, select menu item "File > Examples" and scroll down b
 
 ## Class Reference
 
-This is an overview of the functionality. For details of each method, refer to the comments in the source code, \
+This provides an overview of the library.
+
+For details of each method, refer to the comments in the source code, \
 TODO
 
 Chapter numbers in the source code refer to this version of the data sheet, \
-xxx
-<!-- TODO muman.ch/pub link -->
+TODO muman.ch/pub link
 
+The library is in a single include file, not separate `.h` and `.cpp` files. This is fine if you want to access the class from a single source file, which is the usual case. If you need to access it from more than one source file then separate it into two files.
 
 ```cpp
 class LD2410mmWave
@@ -142,7 +144,7 @@ public:
         byte maxStaticGate;
         byte motionSensitivity[9];
         byte staticSensitivity[9];
-        short unoccupiedDuration;
+        short unoccupiedDelay;
     };
 
     // Radar data 
@@ -198,7 +200,7 @@ public:
 
     bool setBaudRate(byte baudRateIndex);
     bool setGateSensitivity(short gate, byte motionSensitivity, byte staticSensitivity);
-    bool setMaxGate(byte maxMotionGate, byte maxStaticGate, short unoccupiedDuration);
+    bool setMaxGate(byte maxMotionGate, byte maxStaticGate, short unoccupiedDelay);
     bool setDistanceResolution(byte distanceResolutionIndex);
     bool getDistanceResolution(byte* distanceResolutionIndex);
     bool setAuxControlConfiguration(byte lightSensingControl,
@@ -241,6 +243,8 @@ There is a problem where the sensor regularly drops out of Engineering Mode and 
 
 * This (old) new library is still being maintained. If you have a query or find a bug, just email us on `info@muman.ch`.
 
+* `Stream` is used for communications, which makes the code easy to use in other architectures/environments.
+
 * Debug checks and error reporting can be removed by commenting out `#define DEBUG`.
 
 * Configuration methods can be removed by commenting out `#define LD2410_ENABLE_CONFIG`. Configuration is only done once, so you may not need these methods.
@@ -251,13 +255,14 @@ There is a problem where the sensor regularly drops out of Engineering Mode and 
 
 * All methods return `true` on success or `false` on failure, e.g. if a parameter is invalid, communications fails or a response is invalid. Data is returned via parameter pointers.
 
-* Polls for received messages, so it is in fact "async".
+* Polls for received messages, no waits.
 
 * Uses a very simple state machine (6 states) to parse and validate all messages from the sensor as each byte is received. Resynchronizes on error.
 
 * Contains methods to dump the report messages to the Serial Monitor. See `dumpRadarData(RADARDATA* radarData, Stream&)` and `dumpEngineeringData(ENGINEERINGDATA* data, Stream&)`.
 
 * Each method has meaningful comments to help you understand what it does, and why.
+
 
 
 ## References
@@ -274,7 +279,7 @@ TODO add to muman.ch
 **All HLK mmWave documents can be found here** \
 https://www.hlktech.net/index.php?id=1176
 
-**Check out the other LD2410 libraries...** \
+**Some other LD2410 libraries...** \
 https://github.com/ncmreynolds/ld2410 \
 https://github.com/iavorvel/MyLD2410 \
 https://github.com/lizardking/LD2410Async \
@@ -288,7 +293,8 @@ https://github.com/limengdu/mmwave_for_XIAO
 
 | Date       | Version  | Notes        |
 |:---------- |:---------| :----------- |
-| 2026.11.xx | 0.0.0    | Preliminary  |
+| 2026.11.17 | 0.0.0    | Preliminary  |
+
 
 <br/>
 
