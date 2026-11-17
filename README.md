@@ -6,19 +6,24 @@ There are (at least) three versions of the LD2410 sensor module. The LD2410B, LD
 
 The pictures above, left to right,
 
-* 24Ghz mmWave Human Static Presence Sensor for Seeed Studio XIAO, SKU 101010001
-* HLK-2410C
-* HLK-2410B
+* 24Ghz mmWave Human Static Presence Sensor for Seeed Studio XIAO, SKU 101010001 (VCC = 3.3V)
+* HLK-2410C (VCC = 5V)
+* HLK-2410B (VCC = 5V)
 
 The Seeed Studio XIAO board has a Bluetooth antenna and can use a mobile phone application for configuration, which is nice. The other two boards can use a Chinese application (not Digitally Signed) for configuration, but I'm a bit dubious about that one, the download file size is enormous (what's in there?).
 
 All modules use the same S3KM1110 mmWave chip.
+
+> [!CAUTION]
+> The XIAO board is powered by 3.3V and can be used _only_ with 3.3V MCUs. \
+> The HLK-2410C and B boards are powered powered by 5V. However, the RX/TX and GPIO signals are 3.3V, so they _can_ be used safely with 3.3V microcontrollers. 
 
 The picture below is the LD2410S board, which needs the [LD2410SmmWave Library](https://github.com/mumnachu/LD2410SmmWave). This is a nice board, and it is more common and cheaper than the others.
 
 <img height="250" alt="LD2410S Board" src="images/ld2410s.jpg" />
 
 <br/>
+
 
 Now follows a summary of the LD2410's features, so you don't have to read the manual.
 
@@ -126,6 +131,7 @@ Chapter numbers in the source code refer to this version of the data sheet, \
 https://muman.ch/pub/HLK-LD2410C-serial-communication-protocol-V1.07.pdf
 
 The library is in a single include file, not separate `.h` and `.cpp` files. This is fine if you want to access the class from a single source file, which is the usual case. If you need to access it from more than one source file, then move the code into a `.cpp` file.
+
 
 ```cpp
 class LD2410mmWave
@@ -267,7 +273,7 @@ There is a problem where the sensor regularly drops out of Engineering Mode and 
 ## References
 
 **HLK-2410C and HLK-2410B Communications Protocol V1.07** \
-https://muman.ch/pub/HLK-LD2410C-serial-communication-protocol-V1.07.pdf
+https://muman.ch/pub/HLK-LD2410C-serial-communication-protocol-V1.07.pdf \
 https://muman.ch/pub/HLK-LD2410B-serial-communication-protocol-V1.07.pdf
 
 **Other HLK mmWave documents can be found here** \
