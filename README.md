@@ -16,7 +16,7 @@ All modules use the same S3KM1110 mmWave chip.
 
 > [!CAUTION]
 > The XIAO board is powered by 3.3V and can be used _only_ with 3.3V MCUs. \
-> The HLK-2410C and B boards are powered powered by 5V. However, the RX/TX and GPIO signals are 3.3V, so they _can_ be used safely with 3.3V microcontrollers. 
+> The HLK-2410C and B boards are powered powered by 5V (they have 3.3V onboard regulators). However, the RX/TX and GPIO signals are 3.3V, so they _can_ be used safely with both 5V and 3.3V microcontrollers. 
 
 The picture below is the LD2410S board, which needs the [LD2410SmmWave Library](https://github.com/mumnachu/LD2410SmmWave). This is a nice board, and it is more common and cheaper than the others.
 
